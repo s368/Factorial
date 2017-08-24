@@ -1,0 +1,12 @@
+                   mem       loop       reduce         func
+                 <dbl>      <dbl>        <dbl>        <dbl>
+ factorial(1)     5377       5377      10753.0        11242
+ factorial(2)     5866       5865      12220.0        18084
+ factorial(3)     5866       5865      10753.5        23950
+ factorial(4)     6354       6354      12219.0        30059
+ factorial(5)     5866       5866      13197.0        38367
+ factorial(6)     5865       5866      14174.0        47898
+ factorial(7)     5866       7332      15641.0        49364
+ factorial(8)     5866       5866      17595.5        55230
+ factorial(9)     5866       5866      16618.0        60606
+factorial(10)     6599       6844      18084.0        69403
