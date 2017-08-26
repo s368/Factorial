@@ -1,6 +1,3 @@
-###########################################################################
-# 4 functions: loop, reduce, func(i.e. recursion), mem (i.e. memoization).
-###########################################################################
 #loop
 Factorial_loop <- function(n) {
   stopifnot(n >= 0)
@@ -59,10 +56,6 @@ Factorial_mem <- function(n){
   }  
 }
 
-###########################################################################
-# Execution time comparison: produce 'factorial_output.txt' output.
-###########################################################################
-
 library(purrr)
 library(microbenchmark)
 library(tidyr)
@@ -76,7 +69,7 @@ names(fac_loop_data) <- paste0(letters[1:10], 1:10)
 fac_loop_data <- as.data.frame(fac_loop_data)
 
 #fac_loop_data <- 
-fac_loop_data %<>%
+  fac_loop_data %<>%
   gather(num, time) %>%
   group_by(num) %>%
   summarise(med_time = median(time))
@@ -114,13 +107,21 @@ fac_mem_data <- fac_mem_data %>%
   group_by(num) %>%
   summarise(med_time = median(time))
 
+min_y <- min(fac_loop_data$med_time,fac_reduce_data$med_time,fac_rec_data$med_time,fac_mem_data$med_time)
+max_y <- max(fac_loop_data$med_time,fac_reduce_data$med_time,fac_rec_data$med_time,fac_mem_data$med_time)
+
+plot(1:10, fac_loop_data$med_time, xlab = "Factorial Number", ylab = "Median Time (Nanoseconds)",
+     pch = 18, bty = "n", xaxt = "n", yaxt = "n", ylim = c(min_y,max_y))
+axis(1, at = 1:10)
+axis(2, at = seq(0, max_y, by = max_y/10.))
+points(1:10 + .1, fac_reduce_data$med_time, col = "blue", pch = 18)
+points(1:10 + .1, fac_rec_data$med_time, col = "red", pch = 18)
+points(1:10 + .1, fac_mem_data$med_time, col = "yellow", pch = 18)
+legend(1, (max_y-min_y)*2./3., c("Loop", "Reduce","Recursion","Mem"), pch = 18, 
+       col = c("black", "blue","red","yellow"), bty = "n", cex = 1, y.intersp = 1.5)
+
 final_df <- left_join(fac_mem_data,fac_loop_data,by=c("num")) %>% 
   left_join(fac_reduce_data,by=c("num")) %>% 
     left_join(fac_rec_data,by=c("num")) %>%
-      rename(mem=med_time.x,loop=med_time.y,reduce=med_time.x.x,func=med_time.y.y) %>%
-        select(-num)
-
-print(as.data.frame(final_df))
-###########################################################################
-# END
-###########################################################################
+      rename(mem=med_time.x,loop=med_time.y,reduce=med_time.x.x,func=med_time.y.y)
+final_df
